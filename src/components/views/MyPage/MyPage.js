@@ -66,7 +66,7 @@ function MyPage() {
                         MyProds && MyProds.map((myProd, index) => (
                             <React.Fragment key={index}>
                                 <GridCards
-                                    image={`${server}${myProd.mainImage}`}
+                                    image={`${SERVER}${myProd.mainImage}`}
                                     prodId={myProd._id}
                                     prodName={myProd.name}
                                 />
