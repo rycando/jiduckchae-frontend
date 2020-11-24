@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import Axios from 'axios';
+import { SERVER } from '../../../config/config'
 
 function ArtistDetailPage(props) {
 
@@ -28,7 +29,7 @@ function ArtistDetailPage(props) {
                         <a href={`/prod/${prod._id}`}>
                             <div style={{width: '80%', height: '300px', display: 'flex', alignItems: 'center'}}>
                                 <div style={{ width: '270px', height: '270px', margin: 0 }}>
-                                    <img style={{ maxHeight: '100%', objectFit: 'contain' }} src={`http://localhost:5000/${prod.mainImage}`} alt={prod.name}/>
+                                    <img style={{ maxHeight: '100%', objectFit: 'contain' }} src={`${SERVER}/${prod.mainImage}`} alt={prod.name}/>
                                 </div>
                                 <div style={{ display: 'flex', width: '700px', height: '90%', marginLeft: '48px', flexDirection:'column', justifyContent: 'center', textAlign: 'right'}}>
                                     <h1>{prod.name}</h1>

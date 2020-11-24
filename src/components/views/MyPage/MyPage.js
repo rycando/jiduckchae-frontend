@@ -3,6 +3,8 @@ import Axios from 'axios'
 import { useSelector } from 'react-redux';
 import GridCards from '../commons/GridCards';
 import { Row } from 'antd';
+import { SERVER } from '../../../config/config'
+
 
 function MyPage() {
 
@@ -10,7 +12,6 @@ function MyPage() {
     const [MyProds, setMyProds] = useState([])
 
     const user = localStorage.getItem('userId')
-    const server = "http://localhost:5000/"
 
     useEffect(() => {
 
@@ -49,7 +50,7 @@ function MyPage() {
                     {LikeProds && LikeProds.map((likeProd, index) => (
                             <React.Fragment key={index}>
                                 <GridCards
-                                    image={`${server}${likeProd.prodId.mainImage}`}
+                                    image={`${SERVER}${likeProd.prodId.mainImage}`}
                                     prodId={likeProd.prodId._id}
                                     prodName={likeProd.prodId.name}
                                 /> 

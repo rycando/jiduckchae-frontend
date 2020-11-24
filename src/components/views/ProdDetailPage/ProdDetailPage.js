@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import Like from './Section/Like'
 import Comment from './Section/Comment'
+import { SERVER } from '../../../config/config'
 
 function ProdDetailPage(props) {
 
@@ -53,7 +54,7 @@ function ProdDetailPage(props) {
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                     <a href={`/artist/${Prod.artistId._id}`}>
                         <span style={{ display: 'flex', alignItems: 'center', width:'50px', height: '50px', borderRadius: '50%', backgroundColor:'black', marginRight: '0.5rem' }}>
-                            <img style={{ maxWidth: '90%', display: 'block', margin: '0px auto', objectFit: 'contain' }} src={`http://localhost:5000/${Prod.artistId.image}`} alt="artistImage" />
+                            <img style={{ maxWidth: '90%', display: 'block', margin: '0px auto', objectFit: 'contain' }} src={`${SERVER}/${Prod.artistId.image}`} alt="artistImage" />
                         </span>
                         <h3 style={{padding: 0, margin: 0}}> {Prod.artistId.name} </h3>
                     </a>
@@ -66,7 +67,7 @@ function ProdDetailPage(props) {
             </div>
             <div style={{ display: 'flex', width: '90%', alignItems:'center'}}>
                 <div style={{ display: 'flex', width: '50%' }}>
-                    <img style={{ objectFit: 'contain', maxWidth: '100%' }} src={`http://localhost:5000/${Prod.mainImage}`} alt="prodImage"/>
+                    <img style={{ objectFit: 'contain', maxWidth: '100%' }} src={`${SERVER}/${Prod.mainImage}`} alt="prodImage"/>
                 </div>
                 <div style={{ width: '10%'}}/>
                     <div style={{ display: 'flex', width: '40%', flexDirection: 'column' }}>

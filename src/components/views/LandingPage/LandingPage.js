@@ -4,6 +4,7 @@ import Axios from 'axios'
 import { Row } from 'antd'
 import MainImage from './Sections/MainImage'
 import GridCards from '../commons/GridCards'
+import { SERVER } from '../../../config/config'
 
 function LandingPage(props) {
 
@@ -22,7 +23,7 @@ function LandingPage(props) {
         <div style={{ width: '100%', margin: '0' }}>
             {MainProd &&
                 <MainImage
-                    image={`http://localhost:5000/${MainProd.mainImage}`}
+                    image={`${SERVER}/${MainProd.mainImage}`}
                     title={MainProd.name}
                     text={MainProd.content}
                     prodId={MainProd._id}
@@ -35,7 +36,7 @@ function LandingPage(props) {
                     {Prods && Prods.map((prod, index) => (
                         <React.Fragment key={index}>
                             <GridCards
-                                image={`http://localhost:5000/${prod._id.mainImage}`}
+                                image={`${SERVER}/${prod._id.mainImage}`}
                                 prodId={prod._id._id}
                                 prodName={prod._id.name}
                             />
