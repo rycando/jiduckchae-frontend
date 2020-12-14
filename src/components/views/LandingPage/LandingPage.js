@@ -21,10 +21,8 @@ function LandingPage(props) {
     }, [])
 
     useEffect(() => {
-        Axios.post('/api/prod/getProds', {page: Page})
+        Axios.get(`/api/prod/getProds/${Page}`)
             .then(response => {
-                console.log(response.data.prods)
-                console.log(Page)
                 setProds([...Prods,...response.data.prods])
             })
     }, [Page])
