@@ -18,12 +18,18 @@ function LandingPage(props) {
                 setBestProds(response.data.prods)
                 setMainProd(response.data.prods[0]._id)
             })
+            .catch(err => {
+                console.log(err)
+            })
     }, [])
 
     useEffect(() => {
         Axios.get(`/api/prod/getProds/${Page}`)
             .then(response => {
                 setProds([...Prods,...response.data.prods])
+            })
+            .catch(err => {
+                console.log(err)
             })
     }, [Page])
 
