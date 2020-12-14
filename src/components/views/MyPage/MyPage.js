@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Axios from 'axios'
-import { useSelector } from 'react-redux';
 import GridCards from '../commons/GridCards';
 import { Row } from 'antd';
-import { SERVER } from '../../../config/config'
-
 
 function MyPage() {
 
@@ -24,7 +21,6 @@ function MyPage() {
                 if (response.data.success) {
                     setLikeProds(response.data.prods)
                     console.log(response.data.prods)
-                    console.log(user)
                 } else {
                     alert('좋아요 목록을 가져오는데 실패했습니다.')
                 }
@@ -50,7 +46,7 @@ function MyPage() {
                     {LikeProds && LikeProds.map((likeProd, index) => (
                             <React.Fragment key={index}>
                                 <GridCards
-                                    image={`${SERVER}${likeProd.prodId.mainImage}`}
+                                    image={`${process.env.REACT_APP_SERVER}${likeProd.prodId.preImage}`}
                                     prodId={likeProd.prodId._id}
                                     prodName={likeProd.prodId.name}
                                 /> 
@@ -66,7 +62,7 @@ function MyPage() {
                         MyProds && MyProds.map((myProd, index) => (
                             <React.Fragment key={index}>
                                 <GridCards
-                                    image={`${SERVER}${myProd.mainImage}`}
+                                    image={`${process.env.REACT_APP_SERVER}${myProd.preImage}`}
                                     prodId={myProd._id}
                                     prodName={myProd.name}
                                 />

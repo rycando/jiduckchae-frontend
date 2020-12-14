@@ -19,7 +19,7 @@ function SingleComment(props) {
         setOpenReply(!OpenReply)
     }
 
-    const onHnadleChange = (e) => {
+    const onHandleChange = (e) => {
         setCommentValue(e.currentTarget.value)
     }
 
@@ -45,7 +45,7 @@ function SingleComment(props) {
     }
 
     const actions = [
-        <Like userId={localStorage.getItem('userId')} commentId={props.comment._id}/>
+        <Like prodId={props.prodId} userId={localStorage.getItem('userId')} commentId={props.comment._id}/>
         ,<span onClick={onClickReplyOpen} key="comment-basic-reply-to" style={{margin: '0 0 0 10px'}}>Reply to</span>
     ]
     return (
@@ -60,7 +60,7 @@ function SingleComment(props) {
                 <form style={{ display: 'flex' }} onSubmit={onSubmit} >
                     <textarea
                         style={{ width: '100%', borderRadius: '5px' }}
-                        onChange={onHnadleChange}
+                        onChange={onHandleChange}
                         value={CommentValue}
                         placeholder="코멘트를 작성해 주세요"
                     />

@@ -55,13 +55,13 @@ function Comment(props) {
 
             <form style={{ display: 'flex' }} onSubmit={onSubmit} >
                 <textarea
-                    style={{ width: '100%', borderRadius: '5px' }}
+                    style={{ width: '80%', borderRadius: '5px', margin: 'auto' }}
                     onChange={handleClick}
                     value={commentValue}
                     placeholder="코멘트를 작성해 주세요"
                 />
                 <br />
-                <button style={{ width: '20%', height: '52px' }} onClick={onSubmit} > Submit</button>
+                <button style={{ width: '5%', height: '50px', margin: 'auto' }} onClick={onSubmit} > Submit</button>
             </form>
         </div>
     )

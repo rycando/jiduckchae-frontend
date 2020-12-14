@@ -1,1 +1,1 @@
-export const SERVER = "https://jiduckchae.herokuapp.com"
+export const SERVER = "http://localhost:5000/"

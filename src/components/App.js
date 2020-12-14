@@ -14,6 +14,7 @@ import EntUploadPage from './views/EntUploadPage/EntUploadPage';
 import ArtistUploadPage from './views/ArtistUploadPage/ArtistUploadPage';
 import ProdDetailPage from './views/ProdDetailPage/ProdDetailPage';
 import ArtistDetailPage from './views/ArtistDetailPage/ArtistDetailPage';
+import ProdModifyPage from './views/ProdModifyPage/ProdModifyPage'
 // import Footer from "./views/Footer/Footer";
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
           <Route exact path="/uploadArtist" component={Auth(ArtistUploadPage, true)} />
           <Route exact path="/prod/:prodId" component={Auth(ProdDetailPage, null)} />
           <Route exact path="/artist/:artistId" component={Auth(ArtistDetailPage, null)} />
+          <Route exact path="/modify/:prodId" component={Auth(ProdModifyPage, true)} />
         </Switch>
       </div>
       {/* <Footer /> */}

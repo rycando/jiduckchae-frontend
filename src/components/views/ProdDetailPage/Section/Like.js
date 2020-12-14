@@ -7,7 +7,7 @@ function Like(props) {
     if(props.prod) {
         variable = { prodId: props.prodId, userId: props.userId }
     } else {
-        variable = { commentId: props.commentId, userId: props.userId}
+        variable = { prodId: props.prodId, commentId: props.commentId, userId: props.userId }
     }
 
     const [Likes, setLikes] = useState(0)

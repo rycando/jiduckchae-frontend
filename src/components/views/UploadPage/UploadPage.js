@@ -1,10 +1,16 @@
-import React, { useEffect } from 'react'
-import { Typography, Button, Form, message, Input, Icon, Descriptions } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { Typography, Button, Form, message, Input } from 'antd'
 import { useSelector } from 'react-redux';
-import { useState } from 'react';
 import { withRouter } from 'react-router-dom'
-import Dropzone from 'react-dropzone';
 import Axios from 'axios';
+import DropAndCrop from './Section/DropAndCrop';
+import {
+    base64StringtoFile
+} from '../../../utils/ReusableUtils'
+import { v4 } from 'uuid'
+import Calendar from 'react-calendar'
+import 'react-calendar/dist/Calendar.css'
+import moment from 'moment'
 
 const { TextArea } = Input;
 const { Title } = Typography;
@@ -17,8 +23,15 @@ function UploadPage(props) {
         const [Artists, setArtist] = useState([])
         const [Content, setContent] = useState("");
         const [Link, setLink] = useState("");
-        const [ImagePath, setImagePath] = useState("");
+        const [StartDate, setStartDate] = useState(new Date());
+        const [EndDate, setEndDate] = useState(new Date())
 
+        const [OriginFile, setOriginFile] = useState(null);
+        const [ImageSrc, setImageSrc] = useState(null)
+        const [ImageExt, setImageExt] = useState(null)
+        const imagePreviewCanvasRef = React.createRef()
+
+        const uuid = v4();
 
         useEffect(() => {
             Axios.get('/api/artist/all')
@@ -44,44 +57,101 @@ function UploadPage(props) {
             setLink(e.currentTarget.value)
         }
 
-        const onDrop = (files) => {
-            let formData = new FormData;
-            const config = {
-                header: {'content-type': 'multipart/form-data'}
-            }
-            formData.append("file", files[0])
-            Axios.post('/api/prod/uploadImage', formData, config)
-                .then(response => {
-                    if(response.data.success) {
-                        setImagePath(response.data.url)
-                    } else {
-                        alert('파일 업로드에 실패했습니다.')
-                    }
-                })
+        async function onSubmit (e) {
+            e.preventDefault();
+            const imgSrc = ImageSrc
+            const FileName = ProdName
+
+            if(imgSrc) {
+                const canvasRef = imagePreviewCanvasRef.current
+                const imgSrcExt = ImageExt
+                const imageData64 = canvasRef.toDataURL('image/' + imgSrcExt)
+                const originFilename = FileName + '.' + imgSrcExt
+                const preFilename = FileName + "_preview." + imgSrcExt
+                const newCroppedFile = base64StringtoFile(imageData64, preFilename)
+                // let originFormData = new FormData;
+                // let preFormData = new FormData;
+                // const config = {
+                //     header: {'content-type': 'multipart/form-data'}
+                // }
+                // originFormData.append("file", OriginFile)
+                // preFormData.append("file", newCroppedFile)
+                let image = await Axios.post('/api/prod/getUrl', {name: uuid + originFilename})
+                    .then(response => {
+                            return (response.data)
+                    })
+                Axios.put(image.postURL, OriginFile)
+                    .then(response => {
+                        console.log(response)
+                        if(response) {
+
+                        } else {
+                            alert('이미지 업로드에 실패했습니다.')
+                        }
+                    })
+                let preImage = await Axios.post('/api/prod/getPreUrl', {name: uuid + preFilename})
+                    .then(response => {
+                            return (response.data)
+                    })
+                Axios.put(preImage.postURL, newCroppedFile)
+                    .then(response => {
+                        console.log(response)
+                        if(response) {
+
+                        } else {
+                            alert('이미지 업로드에 실패했습니다.')
+                        }
+                    })
+                    
+                const variable = {
+                    'userId': user.userData._id,
+                    'name': ProdName,
+                    'artistId': Category,
+                    'link': Link,
+                    'mainImage': image.filename,
+                    'preImage': image.filename,
+                    'mainImagePath': image.getURL,
+                    'preImagePath': preImage.getURL,
+                    'startDate': StartDate,
+                    'endDate': EndDate,
+                    'content': Content
+                }
+
+                Axios.post('/api/prod/addProd', variable)
+                    .then(response => {
+                        if (response.data.success) {
+                            message.success('성공적으로 업로드를 완료했습니다.')
+                            props.history.push('/')
+                        } else {
+                            alert('데이터 저장에 실패했습니다.')
+                        }
+                    })
+                }
         }
 
-        const onSubmit = (e) => {
-            e.preventDefault();
+        const refreshOriginFile = (file) => {
+            setOriginFile(file)
+            return file
+        }
 
-            const variable = {
-                'userId': user.userData._id,
-                'name': ProdName,
-                'artistId': Category,
-                'link': Link,
-                'mainImage': ImagePath,
-                'content': Content
-            }
-            Axios.post('/api/prod/addProd', variable)
-                .then(response => {
-                    if (response.data.success) {
-                        message.success('성공적으로 업로드를 완료했습니다.')
-                        setTimeout(() => {
-                            props.history.push('/')
-                        }, 3000);
-                    } else {
-                        alert('데이터 저장에 실패했습니다.')
-                    }
-                })
+        const refreshImageSrc = (src) => {
+            setImageSrc(src)
+        }
+
+        const refreshImageExt = (ext) => {
+            setImageExt(ext)
+        }
+
+        const onStartDateChange = (date) => {
+            setStartDate(
+                date
+            )
+        }
+
+        const onEndDateChange = (date) => {
+            setEndDate(
+                date
+            )
         }
 
     return (
@@ -90,54 +160,63 @@ function UploadPage(props) {
                 <Title level={2}> Prod Upload </Title>
             </div>
             <Form onSubmit={onSubmit}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Dropzone
-                    onDrop={onDrop}
-                    multieple={false}
-                    maxSize={10000000}>
-                        {({ getRootProps, getInputProps }) => (
-                            <div style={{ width: '300px', height: '240px', border: '1px solid lightgray', display: 'flex',
-                        alignItems: 'center', justifyContent: 'center' }} {...getRootProps()}>
-                            <input {...getInputProps()} />
-                            <Icon type="plus" style={{ fontSize: '3rem' }}/>
-                        </div>
-                        )}
-                    </Dropzone>
+                <DropAndCrop
+                    OriginFile={OriginFile} setOriginFile={refreshOriginFile}
+                    ImageSrc={ImageSrc} setImageSrc={refreshImageSrc}
+                    setImageExt={refreshImageExt}
+                    canvas={imagePreviewCanvasRef}/>
+                <br />
+                <br />
+                <label>상품 이름</label>
+                <Input
+                    onChange={onNameChange}
+                    value={ProdName}
+                />
+                <br />
+                <br />
+                <label>내용</label>
+                <TextArea
+                    onChange={onContentChange}
+                    value={Content}
+                />
+                <br />
+                <br />
+                <div style={{ display: 'flex', justifyContent:'space-between' }}>
+                    <div style={{ marginLeft: '1rem', width: '45%' }}>
+                        <label>펀딩 시작일</label>
+                        <Calendar
+                            onChange={onStartDateChange}
+                            value={StartDate}
+                        />
+                    </div>
+                    <div style={{ marginRight: '1rem', width: '45%' }}>
+                        <label>펀딩 종료일</label>
+                        <Calendar
+                            onChange={onEndDateChange}
+                            value={EndDate}
+                        />
+                    </div>
                 </div>
-            <br />
-            <br />
-            <label>상품 이름</label>
-            <Input
-                onChange={onNameChange}
-                value={ProdName}
-            />
-            <br />
-            <br />
-            <label>내용</label>
-            <TextArea
-                onChange={onContentChange}
-                value={Content}
-            />
-            <br />
-            <br />
-            <label>링크</label>
-            <TextArea
-                onChange={onLinkChange}
-                value={Link}
-            />
-            <br />
-            <br />
-            <select style={{ width: '150px', height: '2rem', border: '1px solid rgba(0,0,0,0.3)', outline: '0', borderRadius: '5px', paddingLeft: '0.5rem' }} onChange={onCategoryChange}>
-                {Artists.map((artist, index) => (
-                    <option key={index} value={artist._id}>{artist.name}</option>
-                ))}
-            </select>
-            <br />
-            <br />
+                <br />
+                <br />
+                <label>링크</label>
+                <TextArea
+                    onChange={onLinkChange}
+                    value={Link}
+                />
+                <br />
+                <br />
+                <select style={{ width: '150px', height: '2rem', border: '1px solid rgba(0,0,0,0.3)', outline: '0', borderRadius: '5px', paddingLeft: '0.5rem' }} onChange={onCategoryChange}>
+                    {Artists.map((artist, index) => (
+                        <option key={index} value={artist._id}>{artist.name}</option>
+                    ))}
+                </select>
+                <br />
+                <br />
 
-            <Button type="primary" size="large" onClick={onSubmit}>
-                Submit
-            </Button>
+                <Button type="primary" size="large" onClick={onSubmit}>
+                    Submit
+                </Button>
             </Form>
         </div>
     )
