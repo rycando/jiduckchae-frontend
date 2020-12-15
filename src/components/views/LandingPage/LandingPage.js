@@ -15,7 +15,7 @@ function LandingPage(props) {
     useEffect(() => {
         Axios.get('/api/like/getBestProds')
             .then(response => {
-                console.log(response)
+                console.log(response.data)
                 setBestProds(response.data.prods)
                 setMainProd(response.data.prods[0]._id)
             })
@@ -27,7 +27,7 @@ function LandingPage(props) {
     useEffect(() => {
         Axios.get(`/api/prod/getProds/${Page}`)
             .then(response => {
-                console.log(response)
+                console.log(response.data)
                 setProds([...Prods,...response.data.prods])
             })
             .catch(err => {
