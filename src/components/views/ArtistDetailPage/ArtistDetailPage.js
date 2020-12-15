@@ -11,7 +11,7 @@ function ArtistDetailPage(props) {
     }
 
     useEffect(() => {
-        Axios.post('/api/prod/getArtistProds', variable)
+        Axios.post(`${process.env.REACT_APP_SERVER}/api/prod/getArtistProds`, variable)
             .then(response => {
                 if(response.data.success) {
                     setProds(response.data.prods);

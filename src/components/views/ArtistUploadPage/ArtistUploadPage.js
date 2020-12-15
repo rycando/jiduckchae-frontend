@@ -15,7 +15,7 @@ function ArtistUploadPage() {
     const [ImagePath, setImagePath] = useState("");
 
     useEffect(() => {
-        Axios.get('/api/ent/all')
+        Axios.get(`${process.env.REACT_APP_SERVER}/api/ent/all`)
             .then(response => {
                 if (response.data.success) {
                     setEnts(response.data.ents)
