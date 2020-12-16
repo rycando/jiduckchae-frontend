@@ -13,7 +13,7 @@ function LandingPage(props) {
     const [Prods, setProds] = useState([])
 
     useEffect(() => {
-        Axios.get(`${process.env.REACT_APP_SERVER}/api/like/getBestProds`)
+        Axios.get('/api/like/getBestProds')
             .then(response => {
                 console.log(response.data)
                 setBestProds(response.data.prods)
@@ -25,7 +25,7 @@ function LandingPage(props) {
     }, [])
 
     useEffect(() => {
-        Axios.get(`${process.env.REACT_APP_SERVER}/api/prod/getProds/${Page}`)
+        Axios.get(`/api/prod/getProds/${Page}`)
             .then(response => {
                 console.log(response.data)
                 setProds([...Prods,...response.data.prods])

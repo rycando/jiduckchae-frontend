@@ -1,8 +1,6 @@
-{
-    "root": "build/",
-    "proxies": {
-      "/api/": {
-        "origin": "https://jiduckche-dev-frontend.herokuapp.com"
-      }
+{  
+    "root": "build/",  
+    "routes": { 
+      "/**": "index.html"  
     }
   }
